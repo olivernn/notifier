@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'json'
+require 'socket'
+
+notification = {}
+
+OptionParser.new do |opts|
+  opts.on("-m", "--message MESSAGE") do |message|
+    notification["message"] = message
+  end
+
+  opts.on("-t", "--title TITLE") do |title|
+    notification["title"] = title
+  end
+
+  opts.on("-s", "--subtitle SUBTITLE") do |subtitle|
+    notification["subtitle"] = subtitle
+  end
+end.parse!
+
+socket = TCPSocket.new 'localhost', 45654
+
+socket.puts notification.to_json
+socket.close
